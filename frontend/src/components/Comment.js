@@ -7,7 +7,7 @@ function Comment(props) {
   const api = useAxios();
   const [users, setUsers] = React.useState([]);
 
-  React.useEffect(() => { 
+  React.useEffect(() => {
     api.get('users/')
       .then(res => {
         setUsers(res.data);
@@ -24,17 +24,26 @@ function Comment(props) {
     }
   }
 
-  return(
+  return (
     <div>
-      <p style={{ fontWeight:'bold' }}>
-        {users.find( item => item.id == props.user)?.username} respondeu:
+      <p style={{ fontWeight: 'bold' }}>
+        {users.find(item => item.id == props.user)?.username} respondeu:
       </p>
-      <div style={{ display:'flex', justifyContent:'space-between' }}>
-      <p>{props.comment}</p>
-        <button 
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <p>{props.comment}</p>
+        <button
           onClick={() => handleDelete(props.id)}
-          style={{ background:'lightPink', marginRight:'2rem', height:'2rem', border:'none', borderRadius:'5px' }}>
-            X
+          style={{
+            fontWeight: 'bold',
+            height: '2rem',
+            marginTop: '0.8rem',
+            marginRight: '1rem',
+            borderStyle: 'none',
+            background: 'lightPink',
+            borderRadius: '5px',
+            padding:'0 0.7rem 0 0.7rem'
+          }}>
+          X
         </button>
       </div>
       <hr></hr>

@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import useAxios from '../utils/useAxios';
 import Comment from "./Comment";
+import { Link } from "react-router-dom";
 
 function Thought(props) {
 
@@ -14,20 +15,6 @@ function Thought(props) {
   const [openComments, setOpenComments] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [commentInput, setCommentInput] = React.useState(false);
-
-  const styles = {
-    button: {
-      background: 'lightBlue',
-      marginRight: '2rem',
-      height: '2rem',
-      border: 'none',
-      borderRadius: '5px',
-      ':hover': {
-        background: 'red',
-      }
-    },
-    };
-
 
   React.useEffect(() => {
     api.get('likes/get')
@@ -57,9 +44,13 @@ function Thought(props) {
     api.get('comments/')
       .then(res => {
         setComments(res.data)
-        console.log(res.data[0])
       }
       )
+    api.get('follows/')
+    .then( res  => {
+      props.setFollowigs(res.data.filter(f => f.user == props.userLoged));
+      props.setFollowers(res.data.filter(f => f.following == props.userLoged));
+    })
   }
 
   const handleLikeCount = (array) => {
@@ -102,7 +93,6 @@ function Thought(props) {
 
     }
     api.post('comments/add/', postData).then(res => {
-      console.log(res.data)
       handleGet();
     })
     setOpenComments(true);
@@ -118,27 +108,63 @@ function Thought(props) {
     }
   }
 
+  const handleFollow = () => {
+    if(props.followings.find( o => o.following === props.user)){
+      api.delete(`follows/delete/${(props.followings.find( o => o.following === props.user)).id}/`)
+      .then( r => { handleGet();})
+    } else {
+    let postData = {
+      user: props.userLoged,
+      following: props.user
+    }
+    api.post('follows/add/', postData).then(res => {
+      handleGet();
+    })}
+  }
+
+
   return (
-    <div style={{ background: '#cce7ff', borderRadius: '10px', margin: '2rem', paddingBottom: '1rem' }}>
+    <div style={{ background: '#cce7ff', borderRadius: '10px', margin: '2rem', paddingBottom: '1rem', height:'200px' }}>
       <div style={{ marginLeft: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '1rem' }}>
-          <p style={{ background: 'LightSkyBlue', borderRadius: '6px', padding: '0.2rem', color: '', fontWeight: 'bold' }}>
-            {users.find(r => r.id == props.user)?.username} disse:</p>
-
+          <div style={{ display:'flex' }}>
+            <Link
+              style={{ textDecoration: 'none', color: 'black' }}
+              to={`user/${users.find(item => item.id == props.user)?.id}`} >
+              <p style={{
+                background: 'LightSkyBlue',
+                borderRadius: '6px',
+                padding: '0.2rem', color: '',
+                fontWeight: 'bold'
+              }}>
+                {users.find(r => r.id == props.user)?.username} disse:
+              </p>
+            </Link>
+            <button 
+            style={{ margin:'1rem', background:'LightSkyBlue', 
+            border:'none', fontWeight:'bold', borderRadius:'6px'}}  
+            onClick={handleFollow}
+            >
+              {props.followings?.find( o => o.following === props.user) ?
+              'Deixar de seguir' : 'Seguir'}
+            </button>
+          </div>
           {props.user == props.userLoged
             ? (<button
               onClick={() => { props.handleDelete(props.id) }}
               style={
-                styles.button
-                // {
-                // height: '2rem',
-                // marginTop: '0.8rem',
-                // borderStyle: 'none',
-                // background: 'lightPink',
-                // borderRadius: '5px',
-              // }
-            }>
-              delete
+                {
+                  fontWeight: 'bold',
+                  height: '2rem',
+                  marginTop: '0.8rem',
+                  borderStyle: 'none',
+                  background: 'lightPink',
+                  borderRadius: '5px',
+                  padding: '0 0.7rem 0 0.7rem'
+
+                }
+              }>
+              X
             </button>) :
             null
           }
@@ -175,28 +201,28 @@ function Thought(props) {
               <button onClick={handleOpenCommentInput}>x</button>
             </div>
             )
-            : (<button 
-                onClick={handleOpenCommentInput}
-                style={{ 
-                  background: 'LightSkyBlue', border: 'none', padding: '0.5rem', borderRadius: '10px',
-                  '&:hover': {background:'red'}
-                }}
-                >Comentar
-              </button>)}
+            : (<button
+              onClick={handleOpenCommentInput}
+              style={{
+                background: 'LightSkyBlue', border: 'none', padding: '0.5rem', borderRadius: '10px',
+                '&:hover': { background: 'red' }
+              }}
+            >Comentar
+            </button>)}
+          {comments.filter(r => r.tweet == props.id).length > 0 ? (
+            <button
+              style={{ background: 'LightSkyBlue', border: 'none', padding: '0.5rem', borderRadius: '10px' }}
+              onClick={handleOpenComment}
+            >
+              {openComments ? (<span>Esconder comentários</span>) : (<span>Mostrar comentários</span>)}
+            </button>
+          ) : null}
 
-
-          <button
-            style={{ background: 'LightSkyBlue', border: 'none', padding: '0.5rem', borderRadius: '10px' }}
-            onClick={handleOpenComment}
-          >
-            {openComments ? (<span>Esconder comentários</span>) : (<span>Mostrar comentários</span>)}
-          </button>
         </div>
         <div>
           {openComments ? (
             comments.map((comment) => {
               if (comment.tweet == props.id) {
-                console.log(comment.comment)
                 return (
                   <Comment
                     key={comment.id}

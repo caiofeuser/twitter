@@ -20,6 +20,10 @@ urlpatterns = [
     path('comments/add/', views.addComments),
     path('comments/delete/<str:pk>/', views.deleteComments),
 
+    path('follows/', views.getFollows),
+    path('follows/add/', views.addFollows),
+    path('follows/delete/<str:pk>/', views.deleteFollows),
+
 
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

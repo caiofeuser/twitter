@@ -1,9 +1,16 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
+import { useParams } from 'react-router-dom';
 
 function Header() {
   let { user, logoutUser } = useContext(AuthContext);
+  const { id } = useParams();
+
+  console.log(user)
+
+
+
 
   return (
     <div className="header" style={{ display: 'flex',}}>
@@ -23,7 +30,7 @@ function Header() {
               <li><Link to="/register">Cadastrar</Link></li>
             </>
           )}
-          {user && <li><Link to="/user" >Bem-vindo, {user.username}</Link></li>}
+          {user && <li><Link to={`/user/${user.user_id}`} >Bem-vindo, {user.username}</Link></li>}
         </ul>
       </div>
     </div>

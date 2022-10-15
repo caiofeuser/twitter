@@ -1,4 +1,4 @@
-from .serializers import NoteSerializer, LikeSerializer, UserSerializer, CommentSerializer
+from .serializers import NoteSerializer, LikeSerializer, UserSerializer, CommentSerializer, FollowSerializer
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from .serializers import MyTokenObtainPairSerializer, RegisterSerializer
@@ -7,7 +7,7 @@ from rest_framework import generics
 from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.decorators import api_view
-from .models import Note, Like, Comment
+from .models import Note, Like, Comment, Follow
 
 
 
@@ -41,6 +41,12 @@ def getComments(request):
     serializer = CommentSerializer(comments, many=True)
     return Response(serializer.data)
 
+@api_view(['GET'])
+def getFollows(request):
+    follows = Follow.objects.all()
+    serializer = FollowSerializer(follows, many=True)
+    return Response(serializer.data)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def addNotes(request):
@@ -65,6 +71,15 @@ def addLikes(request):
 def addComments(request):
     user = request.user
     serializer = CommentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save(user=user)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def addFollows(request):
+    user = request.user
+    serializer = FollowSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=user)
     return Response(serializer.data)
@@ -112,6 +127,14 @@ def deleteComments(request, pk):
     comment = user.comment_set.get(id=pk)
     comment.delete()
     return Response('Comment was deleted')
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteFollows(request, pk):
+    user = request.user
+    follow = user.follow_set.get(id=pk)
+    follow.delete()
+    return Response('Follow was deleted')
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

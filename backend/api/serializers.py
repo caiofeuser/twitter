@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Note, Like, Comment
+from .models import Note, Like, Comment, Follow
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -27,6 +27,11 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username')
+
+class FollowSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Follow
+    fields = '__all__'
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

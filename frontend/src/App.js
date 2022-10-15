@@ -7,9 +7,15 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Header from './components/Header';
-import Perfil from './pages/Perfil';
+import Profile from './pages/Profile';
+import { useParams } from 'react-router-dom';
+
+
+
 
 function App() {
+  const { id } = useParams();
+  console.log(id)
   return (
     <Router>
       <div>
@@ -18,7 +24,7 @@ function App() {
           <Routes>
             <Route element={<Login />} path="/login" />
             <Route element={<Register />} path="/register" />
-            <Route element={<Perfil />} path="/user"  />
+            <Route element={<Profile />} path="/user/:id"  />
             <Route path="/" element={<PrivateRoute Component={Home} />} />
           </Routes>
         </AuthProvider>
