@@ -72,10 +72,30 @@ function Home() {
 
   return (
     <section>
-      <h1 style={{ marginLeft: '1rem', marginBottom: '0' }}>Página inicial de {user.username}</h1>
-      <div style={{ display: 'flex', marginLeft: '1rem' }}>
-        <h3>Seguidores: {followers.length}</h3>
-        <h3 style={{ marginLeft: '1rem' }}>Seguindo: {followings.length}</h3>
+      <div>
+        <h1 style={{ marginLeft: '1rem', marginBottom: '0' }}>Página inicial de {user.username}</h1>
+        <div style={{ display: 'flex', marginLeft: '1rem', justifyContent: 'space-between' }}>
+          <div>
+            <h3>Seguidores: {followers.length}</h3>
+            <h3>Seguindo: {followings.length}</h3>
+          </div>
+          <label style={{ marginLeft: '3rem', display: 'block', textAlign: 'center' }}>Pesquisar usuários:
+            <input type="text"
+              style={{
+                marginLeft: '1rem',
+                background: 'AliceBlue',
+                border: 'none',
+                padding: '1rem',
+                borderRadius: '10px',
+                border: '1px solid cce7ff',
+                outline: 'none',
+                marginRight:'3rem',
+                width: '50rem'
+
+              }}
+            />
+          </label>
+        </div>
       </div>
       <hr />
       <div style={{ marginLeft: '1rem' }}>
@@ -90,7 +110,7 @@ function Home() {
         </label>
         <button onClick={handlePost} style={{ marginLeft: '1rem' }}>Post!</button>
       </div>
-      <div style={{ display: 'flex', justifyContent:'space-between' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div style={{ display: "grid", gridColumn: '1fr 3', width: '150vh' }}>
           {
             notesFiltered.map(item => (
@@ -109,17 +129,17 @@ function Home() {
             ))
           }
         </div>
-        <div style={{ display:'flex', flexDirection:'column', marginRight:'5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', marginRight: '5rem' }}>
           <h3>Usuários</h3>
           {
-            users.map(user => (
-              <MiniProfile 
-                key={user.id}
-                username={user.username}
-                handleGet={handleGet}
-                user={user.id}
-              />))
-              }
+            users.filter(u => u.id != user.user_id).map(u => (
+              <MiniProfile
+              key={u.id}
+              username={u.username}
+              handleGet={handleGet}
+              user={u.id} />
+            )) 
+          }
         </div>
       </div>
     </section>

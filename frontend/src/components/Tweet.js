@@ -124,7 +124,7 @@ function Thought(props) {
 
 
   return (
-    <div style={{ background: '#cce7ff', borderRadius: '10px', margin: '2rem', paddingBottom: '1rem', height:'200px' }}>
+    <div style={{ background: '#cce7ff', borderRadius: '10px', margin: '2rem', paddingBottom: '1rem', height:'auto' }}>
       <div style={{ marginLeft: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '1rem' }}>
           <div style={{ display:'flex' }}>

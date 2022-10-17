@@ -19,7 +19,7 @@ function MiniProfile(props) {
   }
 
   return(
-    <div>
+    <div style={{ marginRight:'2rem', width:'200px' }}>
       <h4>{props.username}</h4>
       <button
         onClick={() => { handleFollow(); }}
