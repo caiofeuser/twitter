@@ -2,6 +2,14 @@
 import useAxios from '../utils/useAxios';
 import Comment from "./Comment";
 import { Link } from "react-router-dom";
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import ToggleButton from '@mui/material/ToggleButton';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import Delete from '@mui/icons-material/Delete';
+
 
 function Thought(props) {
 
@@ -15,6 +23,7 @@ function Thought(props) {
   const [openComments, setOpenComments] = React.useState(false);
   const [comment, setComment] = React.useState('');
   const [commentInput, setCommentInput] = React.useState(false);
+
 
   React.useEffect(() => {
     api.get('likes/get')
@@ -47,10 +56,10 @@ function Thought(props) {
       }
       )
     api.get('follows/')
-    .then( res  => {
-      props.setFollowigs(res.data.filter(f => f.user == props.userLoged));
-      props.setFollowers(res.data.filter(f => f.following == props.userLoged));
-    })
+      .then(res => {
+        props.setFollowigs(res.data.filter(f => f.user == props.userLoged));
+        props.setFollowers(res.data.filter(f => f.following == props.userLoged));
+      })
   }
 
   const handleLikeCount = (array) => {
@@ -109,48 +118,56 @@ function Thought(props) {
   }
 
   const handleFollow = () => {
-    if(props.followings.find( o => o.following === props.user)){
-      api.delete(`follows/delete/${(props.followings.find( o => o.following === props.user)).id}/`)
-      .then( r => { handleGet();})
+    if (props.followings.find(o => o.following === props.user)) {
+      api.delete(`follows/delete/${(props.followings.find(o => o.following === props.user)).id}/`)
+        .then(r => { handleGet(); })
     } else {
-    let postData = {
-      user: props.userLoged,
-      following: props.user
+      let postData = {
+        user: props.userLoged,
+        following: props.user
+      }
+      api.post('follows/add/', postData).then(res => {
+        handleGet();
+      })
     }
-    api.post('follows/add/', postData).then(res => {
-      handleGet();
-    })}
   }
 
 
   return (
-    <div style={{ background: '#cce7ff', borderRadius: '10px', margin: '2rem', paddingBottom: '1rem', height:'auto' }}>
+    <Paper style={{ padding: '1rem', borderBottom: 'solid 1px lightgray', height: 'auto', marginBottom: '20px', borderRadius: '0', background:'#fbeee4' }}>
       <div style={{ marginLeft: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '1rem' }}>
-          <div style={{ display:'flex' }}>
+          <div style={{ display: 'flex', }}>
             <Link
-              style={{ textDecoration: 'none', color: 'black' }}
+              style={{ textDecoration: 'none', color: 'black', marginRight: '1rem' }}
               to={`user/${users.find(item => item.id == props.user)?.id}`} >
-              <p style={{
-                background: 'LightSkyBlue',
-                borderRadius: '6px',
-                padding: '0.2rem', color: '',
-                fontWeight: 'bold'
+              <Typography sx={{
+                backgroundColor: '#F8C471',
+                padding: '0.5rem',
+                fontWeight: 'bold',
+                borderRadius: '5px',
+                marginTop: '.8rem',
+                '&:hover': {
+                  background: '#F39C12'
+                }
               }}>
                 {users.find(r => r.id == props.user)?.username} disse:
-              </p>
+              </Typography>
             </Link>
-            <button 
-            style={{ margin:'1rem', background:'LightSkyBlue', 
-            border:'none', fontWeight:'bold', borderRadius:'6px'}}  
-            onClick={handleFollow}
+            <Button
+              sx={{
+                margin: '1rem', color: '#FF720A', marginLeft: '3rem',
+                border: 'none', borderRadius: '6px',
+                '&:hover': { fontWeight: 'bold', color: 'red' }
+              }}
+              onClick={handleFollow}
             >
-              {props.followings?.find( o => o.following === props.user) ?
-              'Deixar de seguir' : 'Seguir'}
-            </button>
+              {props.followings?.find(o => o.following === props.user) ?
+                'Deixar de seguir' : 'Seguir'}
+            </Button>
           </div>
           {props.user == props.userLoged
-            ? (<button
+            ? (<Button
               onClick={() => { props.handleDelete(props.id) }}
               style={
                 {
@@ -165,80 +182,114 @@ function Thought(props) {
                 }
               }>
               X
-            </button>) :
+            </Button>) :
             null
           }
 
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '2rem' }}>
-          <span style={{ width: '85%', padding: '1rem', borderRadius: '5px', borderTop: '1px solid white' }}>
-            {props.tweet}</span>
+          <Typography style={{ width: '85%', padding: '1rem 1rem 2rem 0', borderRadius: '5px', borderTop: '1px solid white' }}>
+            {props.tweet}</Typography>
           <div style={{ marginLeft: '2rem' }}>
-            <label >
-              Like:
-              <input
-                type="checkbox"
-                checked={
-                  (likes.find(lk => lk.tweet == props.id))
-                  // ? true
-                  // : false}
-                }
-                onChange={e => { handlePostLike(); handleLikeCount(globalLikes) }}
-                style={{ marginLeft: '0.5rem', }}
-              />
-            </label>
-            <p>Número de likes:{globalLikes.length}
-            </p>
+            <ToggleButton
+              disableRipple
+              value="checked"
+              sx={{
+                border: 'none', marginLeft: '0.5rem',
+                '&.Mui-selected, &.Mui-selected:hover': { color: '#FF720A', background: 'none' },
+                '&:hover': { background: 'none' }
+              }}
+              selected={
+                (likes.find(lk => lk.tweet == props.id))
+              }
+              onChange={e => { handlePostLike(); handleLikeCount(globalLikes); }}
+            >
+              <ThumbUpIcon />
+            </ToggleButton>
+            <span style={{ fontFamily: "roboto", fontWeight: 'bold', }}>{globalLikes.length}</span>
           </div>
         </div>
         <div style={{ display: 'flex', marginRight: '2rem', justifyContent: 'space-between' }}>
           {commentInput ?
-            (<div>
-              <input type="text" onChange={e => setComment(e.target.value)}></input>
-              <button onClick={handlePostComment}>
-                Enviar
-              </button>
-              <button onClick={handleOpenCommentInput}>x</button>
+            (<div style={{ width: '85%' }}>
+              <TextField
+                onChange={e => setComment(e.target.value)}
+                onKeyPress={e => { if (e.key === 'Enter') { handlePostComment() } }}
+                fullWidth
+                color='warning'
+                variant='standard'
+                placeholder='Escreva sua resposta'
+              >
+              </TextField>
+              <div style={{ marginTop: '2rem' }}>
+                <Button onClick={handlePostComment}
+                  sx={{
+                    border: 'none', padding: '0.5rem', borderRadius: '10px', color: '#FF720A', fontWeight: 'bold',
+                    '&:hover': { color: '#d7691a' }
+                  }}
+                >
+                  Enviar
+                </Button>
+                <Button onClick={handleOpenCommentInput}
+                  sx={{
+                    width: '40px',
+                    color: '#0000008a',
+                    height: '40px',
+                    padding: '0',
+                    marginLeft: '3rem',
+                  }}
+                >
+                  <Delete
+                    sx={{ "&:hover": { color: '#FF3A3A' } }}
+                  />
+                </Button>
+              </div>
             </div>
             )
-            : (<button
+            : (<Button
               onClick={handleOpenCommentInput}
-              style={{
-                background: 'LightSkyBlue', border: 'none', padding: '0.5rem', borderRadius: '10px',
-                '&:hover': { background: 'red' }
+              sx={{
+                background: '#FF720A', color: 'white', marginBottom: '1rem',
+                '&:hover': { background: '#d7691a' }, fontWeight: 'bold', verticalAlign: 'bottom'
               }}
             >Comentar
-            </button>)}
+            </Button>)}
           {comments.filter(r => r.tweet == props.id).length > 0 ? (
-            <button
-              style={{ background: 'LightSkyBlue', border: 'none', padding: '0.5rem', borderRadius: '10px' }}
+            <Button
+              disableFocusRipple
+              sx={{
+                border: 'none', padding: '0.5rem', borderRadius: '10px', color: '#FF9343',
+                '&:hover': { color: '#FF720A' }
+              }}
               onClick={handleOpenComment}
             >
               {openComments ? (<span>Esconder comentários</span>) : (<span>Mostrar comentários</span>)}
-            </button>
+            </Button>
           ) : null}
 
         </div>
-        <div>
+        <div >
           {openComments ? (
             comments.map((comment) => {
               if (comment.tweet == props.id) {
                 return (
-                  <Comment
-                    key={comment.id}
-                    comment={comment.comment}
-                    user={comment.user}
-                    userLoged={props.userLoged}
-                    id={comment.id}
-                    handleGet={handleGet}
-                  />
+                  <div style={{ marginTop: '2rem', marginRight: '2rem', marginLeft: "2rem", borderLeft: '1px solid #FF720A', paddingLeft: '1rem' }}>
+                    <Comment
+                      key={comment.id}
+                      comment={comment.comment}
+                      user={comment.user}
+                      userLoged={props.userLoged}
+                      id={comment.id}
+                      handleGet={handleGet}
+                    />
+                  </div>
                 )
               }
             })
           ) : null}
         </div>
       </div>
-    </div>
+    </Paper>
   );
 }
 

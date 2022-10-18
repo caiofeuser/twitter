@@ -1,10 +1,16 @@
 .header {
-  background-image: linear-gradient(to bottom, lightcyan, white);
-  padding: 10px;
+  background-image: linear-gradient(to right, #ffcca7, #ffffff);
+  padding: 15px;
   text-align: center;
+  color: #fbeee4;
 }
 
 .header ul li {
   display: inline-block;
   padding: 0 10px;
+}
+
+
+body {
+  background-color:#fff9f6;
 }

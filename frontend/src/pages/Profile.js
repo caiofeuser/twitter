@@ -3,6 +3,8 @@ import useAxios from '../utils/useAxios';
 import Tweet from '../components/Tweet';
 import AuthContext from '../context/AuthContext';
 import { useParams } from 'react-router-dom';
+import Typography from '@mui/material/Typography'
+
 
 
 function Profile() {
@@ -11,17 +13,22 @@ function Profile() {
   const api = useAxios();
   const [notes, setNotes] = useState([]);
   const { id } = useParams();
+  const [users, setUsers] = useState([]);
   
 
   useEffect(() => {
     handleGet();
-  }, []);
-
+      }, []);
 
   const handleGet = () => {
     api.get('notes')
       .then(res => {
         setNotes(res.data.filter( note => note.user === parseInt(id)))
+      })
+    api.get('users')
+      .then(res => {
+        setUsers(res.data)
+
       })
   }
 
@@ -34,10 +41,19 @@ function Profile() {
         })
   }}
 
+  
 
   return (
     <div style={{ margin:' 0 1rem 0 1rem ' }}>
-    <h2>Seus tweets</h2>
+    <Typography 
+      variant='h4'
+      sx={{ fontWeight:'bold', margin:'1rem 0 1rem 0' }}
+    >
+      {(user.user_id == parseInt(id)) ? ('Seus tweets') : 
+      (`Tweets de 
+      ${users.find( user => user.id == parseInt(id))?.username}
+      `)}
+      </Typography>
       {notes.map(item => (
         <Tweet
           key={item.id}

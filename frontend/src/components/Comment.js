@@ -1,7 +1,9 @@
 ﻿import { AuthProvider } from "../context/AuthContext";
 import React from "react";
 import useAxios from '../utils/useAxios';
-
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import Delete from '@mui/icons-material/Delete';
 
 function Comment(props) {
   const api = useAxios();
@@ -26,27 +28,24 @@ function Comment(props) {
 
   return (
     <div>
-      <p style={{ fontWeight: 'bold' }}>
+      <Typography style={{ fontWeight: 'bold' }}>
         {users.find(item => item.id == props.user)?.username} respondeu:
-      </p>
+      </Typography>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <p>{props.comment}</p>
-        <button
+        <Typography>{props.comment}</Typography>
+        <Button
           onClick={() => handleDelete(props.id)}
-          style={{
-            fontWeight: 'bold',
-            height: '2rem',
-            marginTop: '0.8rem',
-            marginRight: '1rem',
-            borderStyle: 'none',
-            background: 'lightPink',
-            borderRadius: '5px',
-            padding:'0 0.7rem 0 0.7rem'
+          sx={{
+            width: '40px',
+            color: '#0000008a',
+            height: '40px',
+            padding: '0',
           }}>
-          X
-        </button>
+          <Delete 
+            sx = {{"&:hover": { color: '#FF3A3A' }}}
+          />
+        </Button>
       </div>
-      <hr></hr>
     </div>
   );
 }

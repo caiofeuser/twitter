@@ -15,16 +15,20 @@ import { useParams } from 'react-router-dom';
 
 function App() {
   const { id } = useParams();
-  console.log(id)
   return (
+
     <Router>
       <div>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+        />
         <AuthProvider>
           <Header />
           <Routes>
             <Route element={<Login />} path="/login" />
             <Route element={<Register />} path="/register" />
-            <Route element={<Profile />} path="/user/:id"  />
+            <Route element={<Profile />} path="/user/:id" />
             <Route path="/" element={<PrivateRoute Component={Home} />} />
           </Routes>
         </AuthProvider>
