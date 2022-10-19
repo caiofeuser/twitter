@@ -13,7 +13,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useResolvedPath } from "react-router-dom";
 
 function Home() {
   let { user } = useContext(AuthContext)
@@ -76,13 +76,13 @@ function Home() {
     }
   }
 
-
-  let arrayFilter = [];
-  let notesFiltered = notes;
+  var arrayFilter = [];
+  var notesFiltered = notes;
   followings.forEach(element => {
-    arrayFilter.push(notes.filter(n => n.user == element.following));
+    arrayFilter.push(notes.filter(n => n.user == (element.following)));
   });
   notesFiltered = arrayFilter.flat()
+
 
 
   const usersList = [];
@@ -92,103 +92,72 @@ function Home() {
 
   const handleReRouter = (id) => {
     if (id !== undefined) {
-    navigate(`/user/${id}`)}
+      navigate(`/user/${id}`)
+    }
   }
 
   return (
     <section>
-      <Paper sx={{ margin: '1rem 1rem 0rem 1rem ', padding:'1rem', background:'none' }} elevation={0}>
+      <Paper sx={{ margin: '1rem 1rem 0rem 1rem ', padding: '1rem', background: 'none' }} elevation={0}>
         <Typography
           sx={{ marginLeft: '1rem', marginBottom: '1rem', fontWeight: 'bold', }}
           variant='h4'
         >
           Página inicial de {user.username}
         </Typography>
-        <div style={{ display: 'flex', marginLeft: '1rem', justifyContent: 'space-between', marginBottom: '1rem' }}>
+        <div style={{ display: 'flex', marginLeft: '1rem', justifyContent: 'space-between', }}>
           <div style={{ display: 'flex' }}>
             <Typography
               variant='h5'
             >
-              Seguidores: <span style={{ fontWeight: 'bold', marginRight: '2rem', color:'#FF720A' }}>{followers.length}</span>
+              Seguidores: <span style={{ fontWeight: 'bold', marginRight: '2rem', color: '#FF720A' }}>{followers.length}</span>
             </Typography>
             <Typography
               variant='h5'
             >
-              Seguindo: <span style={{ fontWeight: 'bold', color:'#FF720A' }}>{followings.length}</span>
+              Seguindo: <span style={{ fontWeight: 'bold', color: '#FF720A' }}>{followings.length}</span>
             </Typography>
           </div>
           <div>
-            <div style={{ margin:' 0 5rem 0 0' }}>
+            <div style={{ margin: ' 0 5rem 0 0' }}>
               <Autocomplete
                 disablePortal
+                getOptionLabel={(option) =>
+                  usersList.includes(option) ? option : ''
+                }
                 id="combo-box-demo"
                 options={usersList}
-                
+                onChange={(e, value) => { handleReRouter(users.find(u => u.username == value)?.id) }}
                 sx={{ width: 300 }}
                 renderInput={(params) => {
-                  return(
+                  return (
                     <div>
-                      
                       <TextField {...params} label="Usuários" variant='standard' color='warning'
-                      onClick={() => {
-                        handleReRouter(users.find(u => u.username == params.inputProps.value)?.id)
-                      }}
                         InputProps={{
                           ...params.InputProps,
-                          startAdornment:(
-                            <Link to="user/2">
-                              <InputAdornment position="start">
-                                <PersonSearchIcon />
-                              </InputAdornment>
-                            </Link>
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <PersonSearchIcon />
+                            </InputAdornment>
                           )
                         }}
                       />
-                      
                     </div>
                   )
                 }}
               />
             </div>
-
           </div>
-
-          {/* <ul
-                    style={{
-                      margin: '0'
-
-                    }}
-                  >
-                    {users.filter(item => item.username.includes(searchUser)).map(user => (
-                      <li key={user._id} style={{
-                        padding: '0',
-                        listStyle: 'none',
-                        margin: '0'
-
-                      }}>
-                        <Link to={`user/${users.find(t => t.id == user.id)?.id}`}>
-                          <Typography>{user.username}</Typography>
-
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-
-
-          )} */}
-
-
-
-
         </div>
       </Paper>
       <div style={{ marginLeft: '1rem', }} >
         <TextField
-          onKeyPress={e => { if (e.key === 'Enter') { handlePost() } }}
-          multiline
+          onKeyPress={e => { if (e.key === 'Enter') { handlePost(); setThought('') } }}
           rows={2}
           color='warning'
           fullWidth
+          multiline
+          value={thought}
           label="Oque você está pensando?"
           sx={{
             marginLeft: '1rem', width: '50%', border: 'none', borderRadius: '4px',
@@ -197,8 +166,7 @@ function Home() {
           onChange={e => { setThought(e.target.value); }}
         ></TextField>
         <Button
-          onClick={handlePost}
-          // style={{ marginLeft: '1rem', color:'red' }}
+          onClick={() => { handlePost(); setThought('') }}
           sx={{
             marginLeft: '1rem', background: '#FF720A', color: 'white', marginBottom: '1rem',
             '&:hover': { background: '#B9770E' }, fontWeight: 'bold', verticalAlign: 'bottom'
@@ -210,7 +178,15 @@ function Home() {
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '2rem' }}>
         <div style={{ width: '150vh', }}>
-          {
+          {notesFiltered.length == 0 ? 
+            <div style={{ display: 'flex', height: '100vh', marginTop:'5rem' }}> 
+              <Typography variant='h5'
+              sx={{ fontWeight: 'bold', color: '#FF720A' }}
+              >
+                Nenhuma publicação encontrada
+              </Typography>
+            </div> : 
+          (
             notesFiltered.map(item => (
               <Tweet
                 key={item.id}
@@ -225,20 +201,11 @@ function Home() {
                 setFollowigs={setFollowigs}
               />
             ))
-          }
+          )}
+          
+            
+          
         </div>
-        {/* <div style={{ display: 'flex', flexDirection: 'column', marginRight: '3rem' }}>
-          <h3>Usuários</h3>
-          {
-            users.filter(u => u.id != user.user_id).map(u => (
-              <MiniProfile
-                key={u.id}
-                username={u.username}
-                handleGet={handleGet}
-                user={u.id} />
-            ))
-          }
-        </div> */}
       </div>
     </section>
   );

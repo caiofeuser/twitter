@@ -37,12 +37,12 @@ function Comment(props) {
           onClick={() => handleDelete(props.id)}
           sx={{
             width: '40px',
-            color: '#0000008a',
             height: '40px',
             padding: '0',
+            background: 'none',
           }}>
           <Delete 
-            sx = {{"&:hover": { color: '#FF3A3A' }}}
+            sx = {{color: '#0000008a', "&:hover": { color: '#FF3A3A' }}}
           />
         </Button>
       </div>

@@ -11,6 +11,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Delete from '@mui/icons-material/Delete';
 
 
+
 function Thought(props) {
 
   const api = useAxios();
@@ -105,6 +106,7 @@ function Thought(props) {
       handleGet();
     })
     setOpenComments(true);
+    setComment('');
 
 
   }
@@ -113,7 +115,9 @@ function Thought(props) {
     if (commentInput) {
       setCommentInput(false);
     } else {
-      setCommentInput(true);
+      setCommentInput(true)
+      setOpenComments(true);
+
     }
   }
 
@@ -134,7 +138,7 @@ function Thought(props) {
 
 
   return (
-    <Paper style={{ padding: '1rem', borderBottom: 'solid 1px lightgray', height: 'auto', marginBottom: '20px', borderRadius: '0', background:'#fbeee4' }}>
+    <Paper style={{ padding: '1rem', borderBottom: 'solid 1px lightgray', height: 'auto', marginBottom: '20px', borderRadius: '0', background: '#fbeee4' }}>
       <div style={{ marginLeft: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '1rem' }}>
           <div style={{ display: 'flex', }}>
@@ -147,6 +151,7 @@ function Thought(props) {
                 fontWeight: 'bold',
                 borderRadius: '5px',
                 marginTop: '.8rem',
+                marginBottom: '.8rem',
                 '&:hover': {
                   background: '#F39C12'
                 }
@@ -154,7 +159,8 @@ function Thought(props) {
                 {users.find(r => r.id == props.user)?.username} disse:
               </Typography>
             </Link>
-            <Button
+            {props.userLoged == props.user ? null : (
+              <Button
               sx={{
                 margin: '1rem', color: '#FF720A', marginLeft: '3rem',
                 border: 'none', borderRadius: '6px',
@@ -165,6 +171,8 @@ function Thought(props) {
               {props.followings?.find(o => o.following === props.user) ?
                 'Deixar de seguir' : 'Seguir'}
             </Button>
+            )}
+            
           </div>
           {props.user == props.userLoged
             ? (<Button
@@ -175,13 +183,15 @@ function Thought(props) {
                   height: '2rem',
                   marginTop: '0.8rem',
                   borderStyle: 'none',
-                  background: 'lightPink',
+                  background: 'none',
                   borderRadius: '5px',
                   padding: '0 0.7rem 0 0.7rem'
 
                 }
               }>
-              X
+              <Delete
+                sx={{ color: '#0000008a', '&:hover': { color: '#FF3A3A' } }}
+              />
             </Button>) :
             null
           }
@@ -193,16 +203,19 @@ function Thought(props) {
           <div style={{ marginLeft: '2rem' }}>
             <ToggleButton
               disableRipple
-              value="checked"
+              value="like"
               sx={{
                 border: 'none', marginLeft: '0.5rem',
                 '&.Mui-selected, &.Mui-selected:hover': { color: '#FF720A', background: 'none' },
                 '&:hover': { background: 'none' }
               }}
               selected={
-                (likes.find(lk => lk.tweet == props.id))
+                ((likes.find(lk => lk.tweet == props.id)) != undefined ? true : false) // da merda se n fizer isso
               }
-              onChange={e => { handlePostLike(); handleLikeCount(globalLikes); }}
+              onChange={e => {
+                handlePostLike();
+                handleLikeCount(globalLikes);
+              }}
             >
               <ThumbUpIcon />
             </ToggleButton>
@@ -216,6 +229,7 @@ function Thought(props) {
                 onChange={e => setComment(e.target.value)}
                 onKeyPress={e => { if (e.key === 'Enter') { handlePostComment() } }}
                 fullWidth
+                value={comment}
                 color='warning'
                 variant='standard'
                 placeholder='Escreva sua resposta'
@@ -275,7 +289,7 @@ function Thought(props) {
                 return (
                   <div style={{ marginTop: '2rem', marginRight: '2rem', marginLeft: "2rem", borderLeft: '1px solid #FF720A', paddingLeft: '1rem' }}>
                     <Comment
-                      key={comment.id}
+                      key={comment.id} // pq ele ainda pede uma key?
                       comment={comment.comment}
                       user={comment.user}
                       userLoged={props.userLoged}
