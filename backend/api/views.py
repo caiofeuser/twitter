@@ -107,7 +107,7 @@ def updateLikes(request, pk):
 # olhar com atenção aqui 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def updateFollows (request, pk):
+def updateFollows(request, pk):
     user = request.user
     follow = user.follow_set.get(id=pk)
     serializer = FollowSerializer(instance=follow, data=request.data)

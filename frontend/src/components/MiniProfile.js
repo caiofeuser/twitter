@@ -10,6 +10,7 @@ function MiniProfile(props) {
   const api = useAxios();
 
   useEffect(() => {
+    console.log(props.followers)
   }, []);
 
   const handleApproval = (id) => {
@@ -19,7 +20,8 @@ function MiniProfile(props) {
       "following": props.userLoged,
       "approved": true
     })
-    api.put(`follows/update/${id}/`,
+    //api.delete(`follows/delete/${(props.followings.find(o => o.following === props.user)).id}/`)
+    api.put(`follows/update/87/`,
       {
         "user": props.followers.user,
         "following": props.userLoged,
@@ -40,7 +42,7 @@ function MiniProfile(props) {
         <Typography variant='h6'>{props.username + ' ' + props.id}</Typography>
         <IconButton
           sx={{
-            margin: '0 0 1rem 2rem', 
+            margin: '0 0 1rem 2rem',
             '&:hover': {
               backgroundColor: '#fbeee4',
             },
@@ -52,7 +54,7 @@ function MiniProfile(props) {
           <CheckCircleIcon
             sx={{
               color: '#FF720A',
-              '&:hover': { 
+              '&:hover': {
                 color: '#d7691a',
               },
             }}

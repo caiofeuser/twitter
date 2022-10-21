@@ -14,8 +14,7 @@ function Comment(props) {
       .then(res => {
         setUsers(res.data);
       })
-  },[]);
-
+  }, []);
 
   const handleDelete = (id) => {
     if (id !== undefined) {
@@ -27,26 +26,25 @@ function Comment(props) {
   }
 
   return (
-    <div style={{ marginBottom:'1rem'}}>
+    <div style={{ marginBottom: '1rem' }}>
       <Typography style={{ fontWeight: 'bold' }}>
         {users.find(item => item.id == props.user)?.username} respondeu:
       </Typography>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography>{props.comment}</Typography>
         {props.user == props.userLoged ? (
-        <IconButton
-          onClick={() => handleDelete(props.id)}
-          sx={{
-            width: '40px',
-            height: '40px',
-            padding: '0',
-            background: 'none',
-          }}>
-          <Delete 
-            sx = {{color: '#0000008a', "&:hover": { color: '#FF3A3A' }}}
-          />
-        </IconButton>
-
+          <IconButton
+            onClick={() => handleDelete(props.id)}
+            sx={{
+              width: '40px',
+              height: '40px',
+              padding: '0',
+              background: 'none',
+            }}>
+            <Delete
+              sx={{ color: '#0000008a', "&:hover": { color: '#FF3A3A' } }}
+            />
+          </IconButton>
         ) : null}
       </div>
     </div>

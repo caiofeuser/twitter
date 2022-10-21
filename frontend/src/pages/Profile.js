@@ -83,7 +83,7 @@ function Profile() {
       ) : (
         <>
           {followings.find(u => u.following === parseInt(id) || user.user_id == parseInt(id)) !== undefined ? (
-            <div style={{ margin: ' 0 1rem 0 1rem ' }}>
+            <div style={{ margin: ' 0 1rem 0 2rem ' }}>
               <Typography
                 variant='h4'
                 sx={{ fontWeight: 'bold', margin: '1rem 0 1rem 0' }}

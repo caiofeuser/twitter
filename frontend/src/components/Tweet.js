@@ -132,7 +132,6 @@ function Tweet(props) {
     }
   }
 
-
   return (
     <Paper elevation={2}
       style={{
@@ -302,7 +301,6 @@ function Tweet(props) {
               {openComments ? (<span>Esconder comentários</span>) : (<span>Mostrar comentários</span>)}
             </Button>
           ) : null}
-
         </div>
         <div >
           {openComments ? (
@@ -311,7 +309,7 @@ function Tweet(props) {
                 return (
                   <div style={{ marginTop: '2rem', marginRight: '2rem', marginLeft: "2rem", borderLeft: '1px solid #FF720A', paddingLeft: '1rem' }}>
                     <Comment
-                      key={comment.id} // pq ele ainda pede uma key?
+                      key={comment.id} 
                       comment={comment.comment}
                       user={comment.user}
                       userLoged={props.userLoged}

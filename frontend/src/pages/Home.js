@@ -87,6 +87,7 @@ function Home() {
   followings.forEach(element => {
     arrayFilter.push(notes.filter(n => n.user == (element.following)));
   });
+
   notesFiltered = arrayFilter.flat()
 
   // const handleFilter = (id) => {
@@ -98,7 +99,6 @@ function Home() {
   //   })
   //   return false;
   // }
-
 
   const usersList = [];
   users.forEach(element => {
@@ -134,11 +134,11 @@ function Home() {
                   <Typography
                     variant='h5'
                   >
-                    Seguindo: <span style={{ fontWeight: 'bold', color: '#FF720A' }}>{followings.length}</span>
+                    Seguindo: <span style={{ fontWeight: 'bold', color: '#FF720A' }}>{followings.length - 1}</span>
                   </Typography>
                 </div>
                 <div>
-                  <div style={{ margin: ' 0 5rem 0 0' }}>
+                  <div style={{ margin: ' 0 3rem 0 0' }}>
                     <Autocomplete
                       disablePortal
                       getOptionLabel={(option) =>
