@@ -19,7 +19,8 @@ class Like(models.Model):
 
 class Follow(models.Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-  following = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='following')  
+  following = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='following')
+  approved = models.BooleanField(default=False)  
 
   def __str__(self):
     return f'{self.user} - {self.following}'

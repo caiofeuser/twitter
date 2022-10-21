@@ -2,7 +2,7 @@
 import React from "react";
 import useAxios from '../utils/useAxios';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import Delete from '@mui/icons-material/Delete';
 
 function Comment(props) {
@@ -14,7 +14,7 @@ function Comment(props) {
       .then(res => {
         setUsers(res.data);
       })
-  });
+  },[]);
 
 
   const handleDelete = (id) => {
@@ -27,13 +27,14 @@ function Comment(props) {
   }
 
   return (
-    <div>
+    <div style={{ marginBottom:'1rem'}}>
       <Typography style={{ fontWeight: 'bold' }}>
         {users.find(item => item.id == props.user)?.username} respondeu:
       </Typography>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Typography>{props.comment}</Typography>
-        <Button
+        {props.user == props.userLoged ? (
+        <IconButton
           onClick={() => handleDelete(props.id)}
           sx={{
             width: '40px',
@@ -44,7 +45,9 @@ function Comment(props) {
           <Delete 
             sx = {{color: '#0000008a', "&:hover": { color: '#FF3A3A' }}}
           />
-        </Button>
+        </IconButton>
+
+        ) : null}
       </div>
     </div>
   );

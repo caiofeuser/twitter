@@ -23,7 +23,7 @@ urlpatterns = [
     path('follows/', views.getFollows),
     path('follows/add/', views.addFollows),
     path('follows/delete/<str:pk>/', views.deleteFollows),
-
+    path('follows/update/<str:pk>/', views.updateFollows),
 
     path('token/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),

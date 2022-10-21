@@ -104,6 +104,17 @@ def updateLikes(request, pk):
         serializer.save()
     return Response(serializer.data)
 
+# olhar com atenção aqui 
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def updateFollows (request, pk):
+    user = request.user
+    follow = user.follow_set.get(id=pk)
+    serializer = FollowSerializer(instance=follow, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteNotes(request, pk):

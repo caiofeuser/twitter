@@ -9,11 +9,10 @@ import TextField from '@mui/material/TextField';
 import ToggleButton from '@mui/material/ToggleButton';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import Delete from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
+import Cancel from '@mui/icons-material/Cancel';
 
-
-
-function Thought(props) {
-
+function Tweet(props) {
   const api = useAxios();
   const [likes, setLikes] = React.useState([]);
   const [globalLikes, setGlobalLikes] = React.useState([]);
@@ -107,8 +106,6 @@ function Thought(props) {
     })
     setOpenComments(true);
     setComment('');
-
-
   }
 
   const handleOpenCommentInput = () => {
@@ -117,7 +114,6 @@ function Thought(props) {
     } else {
       setCommentInput(true)
       setOpenComments(true);
-
     }
   }
 
@@ -138,41 +134,67 @@ function Thought(props) {
 
 
   return (
-    <Paper style={{ padding: '1rem', borderBottom: 'solid 1px lightgray', height: 'auto', marginBottom: '20px', borderRadius: '0', background: '#fbeee4' }}>
+    <Paper elevation={2}
+      style={{
+        padding: '1rem', borderBottom: 'solid 1px lightgray',
+        height: 'auto',
+        marginBottom: '20px',
+        borderRadius: '0',
+        background: '#fbeee4'
+      }}>
       <div style={{ marginLeft: '2rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginRight: '1rem' }}>
           <div style={{ display: 'flex', }}>
-            <Link
-              style={{ textDecoration: 'none', color: 'black', marginRight: '1rem' }}
-              to={`user/${users.find(item => item.id == props.user)?.id}`} >
-              <Typography sx={{
-                backgroundColor: '#F8C471',
-                padding: '0.5rem',
-                fontWeight: 'bold',
-                borderRadius: '5px',
-                marginTop: '.8rem',
-                marginBottom: '.8rem',
-                '&:hover': {
-                  background: '#F39C12'
-                }
-              }}>
-                {users.find(r => r.id == props.user)?.username} disse:
-              </Typography>
-            </Link>
+            {props.isInProfile ?
+              (
+                <Typography sx={{
+                  backgroundColor: '#F8C471',
+                  padding: '0.5rem',
+                  fontWeight: 'bold',
+                  borderRadius: '5px',
+                  marginTop: '.8rem',
+                  marginBottom: '.8rem',
+                  '&:hover': {
+                    background: '#F39C12'
+                  }
+                }}>
+                  {users.find(r => r.id == props.user)?.username} disse:
+                </Typography>
+              ) :
+              (
+                <Link
+                  style={{ textDecoration: 'none', color: 'black', marginRight: '1rem' }}
+                  to={`user/${users.find(item => item.id == props.user)?.id}`} >
+                  <Typography sx={{
+                    backgroundColor: '#F8C471',
+                    padding: '0.5rem',
+                    fontWeight: 'bold',
+                    borderRadius: '5px',
+                    marginTop: '.8rem',
+                    marginBottom: '.8rem',
+                    '&:hover': {
+                      background: '#F39C12'
+                    }
+                  }}>
+                    {users.find(r => r.id == props.user)?.username} disse:
+                  </Typography>
+                </Link>
+              )
+            }
             {props.userLoged == props.user ? null : (
               <Button
-              sx={{
-                margin: '1rem', color: '#FF720A', marginLeft: '3rem',
-                border: 'none', borderRadius: '6px',
-                '&:hover': { fontWeight: 'bold', color: 'red' }
-              }}
-              onClick={handleFollow}
-            >
-              {props.followings?.find(o => o.following === props.user) ?
-                'Deixar de seguir' : 'Seguir'}
-            </Button>
+                sx={{
+                  margin: '1rem', color: '#FF720A', marginLeft: '3rem',
+                  border: 'none', borderRadius: '6px',
+                  '&:hover': { fontWeight: 'bold', color: 'red' }
+                }}
+                onClick={handleFollow}
+              >
+                {props.followings?.find(o => o.following === props.user) ?
+                  'Deixar de seguir' : 'Seguir'}
+              </Button>
             )}
-            
+
           </div>
           {props.user == props.userLoged
             ? (<Button
@@ -244,7 +266,7 @@ function Thought(props) {
                 >
                   Enviar
                 </Button>
-                <Button onClick={handleOpenCommentInput}
+                <IconButton onClick={handleOpenCommentInput}
                   sx={{
                     width: '40px',
                     color: '#0000008a',
@@ -253,10 +275,10 @@ function Thought(props) {
                     marginLeft: '3rem',
                   }}
                 >
-                  <Delete
+                  <Cancel
                     sx={{ "&:hover": { color: '#FF3A3A' } }}
                   />
-                </Button>
+                </IconButton>
               </div>
             </div>
             )
@@ -307,4 +329,4 @@ function Thought(props) {
   );
 }
 
-export default Thought;
+export default Tweet;
