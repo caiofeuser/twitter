@@ -10,18 +10,11 @@ function MiniProfile(props) {
   const api = useAxios();
 
   useEffect(() => {
-    console.log(props.followers)
   }, []);
 
   const handleApproval = (id) => {
-    console.log({
-      "id": id,
-      "user": props.followers.user,
-      "following": props.userLoged,
-      "approved": true
-    })
-    //api.delete(`follows/delete/${(props.followings.find(o => o.following === props.user)).id}/`)
-    api.put(`follows/update/87/`,
+    
+    api.put(`follows/update/${id}/`,
       {
         "user": props.followers.user,
         "following": props.userLoged,
@@ -30,6 +23,7 @@ function MiniProfile(props) {
     )
       .then(res => {
         props.handleGet();
+        console.log(res.data);
       })
   }
 
@@ -39,7 +33,7 @@ function MiniProfile(props) {
       borderLeft: "3px solid #FF720A ", paddingLeft: '1rem'
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant='h6'>{props.username + ' ' + props.id}</Typography>
+        <Typography variant='h6'>{props.username}</Typography>
         <IconButton
           sx={{
             margin: '0 0 1rem 2rem',

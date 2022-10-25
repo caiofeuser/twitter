@@ -89,16 +89,13 @@ function Home() {
   });
 
   notesFiltered = arrayFilter.flat()
-
-  // const handleFilter = (id) => {
-  //   console.log(followings)
-  //   followings.forEach(element => {
-  //     if (element.following == id) {
-  //       return true;
-  //     }
-  //   })
-  //   return false;
-  // }
+  
+  const handleFilter = (id) => {
+    if (followings.filter(f => f.following === id && f.approved).length > 0) {
+      return true;
+    }
+    return false;
+  }
 
   const usersList = [];
   users.forEach(element => {
@@ -134,7 +131,7 @@ function Home() {
                   <Typography
                     variant='h5'
                   >
-                    Seguindo: <span style={{ fontWeight: 'bold', color: '#FF720A' }}>{followings.length - 1}</span>
+                    Seguindo: <span style={{ fontWeight: 'bold', color: '#FF720A' }}>{followings.length}</span>
                   </Typography>
                 </div>
                 <div>
@@ -206,7 +203,7 @@ function Home() {
                     </Typography>
                   </div> :
                   (
-                    notesFiltered.map(item => (
+                    notes.filter( n => handleFilter(n.user)).map(item => (
                       <Tweet
                         key={item.id}
                         id={item.id}
@@ -236,13 +233,23 @@ function Home() {
                     <Typography
                       variant='h5'
                       align='center'
+                      mr={1}
                       sx={{ fontWeight: 'bold', }}
                     >
                       Solicitações à seguir
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    {Pagination(followers).filter(f => f.approved == false).map(f => (
+                    { followers.filter(f => f.approved == false).length == 0 ? (
+                      <Typography
+                        variant='h7'
+                        align='center'
+                        sx={{ fontWeight: 'bold', }}
+                      >
+                        Nenhuma solicitação
+                      </Typography>
+                    ) : (
+                      followers.filter(f => f.approved == false).map(f => (
                       <MiniProfile
                         key={f.id}
                         id={f.id}
@@ -253,8 +260,9 @@ function Home() {
                         followings={followings}
                         handleGet={handleGet}
                       />
-                    ))}
-                    <Button
+                    )))
+                    }
+                    {/* <Button
                       sx={{
                         marginTop: '2rem', background: '#FF720A', color: 'white', marginLeft: '2rem',
                         '&:hover': { background: '#B9770E' }, fontWeight: 'bold', verticalAlign: 'bottom'
@@ -262,7 +270,7 @@ function Home() {
                       onClick={() => { defaultQuantity === 5 ? setDefaultQuantity(Infinity) : setDefaultQuantity(5) }}
                     >
                       {defaultQuantity === 5 ? 'Mostrar todos' : 'Mostrar menos'}
-                    </Button>
+                    </Button> */}
                   </AccordionDetails>
                 </Accordion>
 

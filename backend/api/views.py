@@ -109,7 +109,7 @@ def updateLikes(request, pk):
 @permission_classes([IsAuthenticated])
 def updateFollows(request, pk):
     user = request.user
-    follow = user.follow_set.get(id=pk)
+    follow = Follow.objects.get(following=user,id=pk)
     serializer = FollowSerializer(instance=follow, data=request.data)
     if serializer.is_valid():
         serializer.save()

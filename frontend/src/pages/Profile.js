@@ -33,6 +33,7 @@ function Profile() {
             api.get('follows/')
               .then(res => {
                 setFollowigs(res.data.filter(f => f.user == user.user_id));
+                console.log(res.data.filter(f => f.user == user.user_id));
                 setFollowers(res.data.filter(f => f.following == user.user_id));
                 setLoading(false);
               })
@@ -70,19 +71,21 @@ function Profile() {
   return (
     <div>
       {loading ? (
-                  <div style={{
-                    display: 'flex',
-                    justifyItems: 'center',
-                    height: '100vh',
-                    alignContent: 'center',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    <CircularProgress color='warning' />
-                  </div>
+        <div style={{
+          display: 'flex',
+          justifyItems: 'center',
+          height: '100vh',
+          alignContent: 'center',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          <CircularProgress color='warning' />
+        </div>
       ) : (
         <>
-          {followings.find(u => u.following === parseInt(id) || user.user_id == parseInt(id)) !== undefined ? (
+          {followings.find(u => (u.following === parseInt(id) && u.approved == true) || user.user_id == parseInt(id)) !== undefined ? (
+
+
             <div style={{ margin: ' 0 1rem 0 2rem ' }}>
               <Typography
                 variant='h4'
@@ -150,7 +153,9 @@ function Profile() {
                     }}
                     onClick={() => { handleFollow(); }}
                   >
-                    Seguir
+                    {followings.filter(f => f.following === parseInt(id)).length != 0  ?
+                      'Solicitação enviada' :
+                      'Seguir'}
                   </Button>
                 </div>
               </div>
