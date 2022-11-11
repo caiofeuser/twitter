@@ -14,7 +14,6 @@ function Header() {
   let { user, logoutUser } = useContext(AuthContext);
   const { id } = useParams();
 
-
   return (
     <Paper className="header" sx ={{ display: 'flex',borderRadius:'0', background:'#858585'}} elevation={2}>
       <div style={{ marginLeft:'1rem' }}>

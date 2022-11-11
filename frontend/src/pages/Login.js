@@ -68,6 +68,11 @@ function Login() {
             }}>
             Login
           </Button>
+          <Typography
+          >
+            Não tem uma conta? 
+            <a href="/register" style={{ textDecoration: 'none', color: '#FF720A' }}> Crie uma agora!</a>
+          </Typography>
         </div>
       </div>
     </div>

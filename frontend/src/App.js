@@ -9,9 +9,7 @@ import Register from './pages/Register';
 import Header from './components/Header';
 import Profile from './pages/Profile';
 import { useParams } from 'react-router-dom';
-
-
-
+import Aula from './pages/Aula';
 
 function App() {
   const { id } = useParams();
@@ -30,6 +28,7 @@ function App() {
             <Route element={<Register />} path="/register" />
             <Route element={<Profile />} path="/user/:id" />
             <Route path="/" element={<PrivateRoute Component={Home} />} />
+            <Route path="/aula" element={<Aula/>} />
           </Routes>
         </AuthProvider>
       </div>

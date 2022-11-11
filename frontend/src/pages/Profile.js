@@ -33,7 +33,6 @@ function Profile() {
             api.get('follows/')
               .then(res => {
                 setFollowigs(res.data.filter(f => f.user == user.user_id));
-                console.log(res.data.filter(f => f.user == user.user_id));
                 setFollowers(res.data.filter(f => f.following == user.user_id));
                 setLoading(false);
               })
@@ -47,7 +46,6 @@ function Profile() {
     if (id !== undefined) {
       api.delete(`notes/delete/${id}/`)
         .then(res => {
-          setNotes(notes.filter(note => note._id !== id))
           handleGet();
         })
     }

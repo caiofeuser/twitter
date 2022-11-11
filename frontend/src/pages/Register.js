@@ -3,16 +3,19 @@ import AuthContext from '../context/AuthContext';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
   const { registerUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     registerUser(username, password, password2);
+    navigate('/');
   };
 
   return (
@@ -44,7 +47,7 @@ function Register() {
               placeholder="Insira seu suário"
               required
               label='Usuário'
-            sx={{ mt: 5, minWidth: '20rem' }}
+              sx={{ mt: 5, minWidth: '20rem' }}
 
             />
             <TextField
@@ -54,7 +57,7 @@ function Register() {
               placeholder="Insira sua senha"
               required
               label='Senha'
-            sx={{ mt: 3, mb: 3, minWidth: '20rem' }}
+              sx={{ mt: 3, mb: 3, minWidth: '20rem' }}
 
             />
             <TextField
@@ -64,10 +67,10 @@ function Register() {
               placeholder="Confirme sua senha"
               label='Confirme a senha'
               required
-            sx={{ mb: 3, minWidth: '20rem' }}
+              sx={{ mb: 3, minWidth: '20rem' }}
 
             />
-            {password2 !== password ? 'Passwords do not match' : ''}
+            {password2 !== password ? 'As senhas não são iguais' : ''}
             <Button
               onClick={handleSubmit}
               sx={{
@@ -79,7 +82,16 @@ function Register() {
                   background: '#d7691a',
                 }
               }}
-              type="submit">Register</Button>
+              type="submit">
+                
+                Register
+                
+                </Button>
+            <Typography
+            >
+              Volte para o login
+              <a href="/register" style={{ textDecoration: 'none', color: '#FF720A' }}> Aqui!</a>
+            </Typography>
           </div>
         </div>
       </div>

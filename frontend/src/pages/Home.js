@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import useAxios from '../utils/useAxios';
-import Tweet from '../components/Tweet';
 import AuthContext from '../context/AuthContext';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -8,7 +7,6 @@ import Typography from '@mui/material/Typography';
 import PersonSearchIcon from '@mui/icons-material/PersonSearch';
 import Autocomplete from '@mui/material/Autocomplete';
 import InputAdornment from '@mui/material/InputAdornment';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import { useNavigate, } from "react-router-dom";
 import MiniProfile from '../components/MiniProfile';
@@ -17,7 +15,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Stack from '@mui/material/Stack';
+import Feed from '../components/Feed';
 
 function Home() {
   let { user } = useContext(AuthContext)
@@ -30,7 +28,6 @@ function Home() {
   const [followings, setFollowigs] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [searchUser, setSearchUser] = useState('');
-  const [defaultQuantity, setDefaultQuantity] = useState(5);
   const [loading, setLoading] = useState(false);
 
   const handleGet = () => {
@@ -72,29 +69,11 @@ function Home() {
     if (id !== undefined) {
       api.delete(`notes/delete/${id}`)
         .then(res => {
-          setNotes(notes.filter(note => note._id !== id))
+          setNotes(notes)
+          console.log(res.data)
           handleGet();
         })
     }
-  }
-
-  const Pagination = (json) => {
-    return json.slice(0, defaultQuantity);
-  }
-
-  var arrayFilter = [];
-  var notesFiltered = notes;
-  followings.forEach(element => {
-    arrayFilter.push(notes.filter(n => n.user == (element.following)));
-  });
-
-  notesFiltered = arrayFilter.flat()
-  
-  const handleFilter = (id) => {
-    if (followings.filter(f => f.following === id && f.approved).length > 0) {
-      return true;
-    }
-    return false;
   }
 
   const usersList = [];
@@ -193,33 +172,15 @@ function Home() {
               </Button>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '2rem', paddingLeft: '0', }}>
-              <div style={{ width: '140vh', }}>
-                {notesFiltered.length == 0 ?
-                  <div style={{ display: 'flex', height: '100vh', marginTop: '5rem', }}>
-                    <Typography variant='h5'
-                      sx={{ fontWeight: 'bold', color: '#FF720A' }}
-                    >
-                      Nenhuma publicação encontrada
-                    </Typography>
-                  </div> :
-                  (
-                    notes.filter( n => handleFilter(n.user)).map(item => (
-                      <Tweet
-                        key={item.id}
-                        id={item.id}
-                        user={item.user}
-                        tweet={item.tweet}
-                        handleDelete={handleDelete}
-                        userLoged={user.user_id}
-                        followers={followers}
-                        setFollowers={setFollowers}
-                        followings={followings}
-                        setFollowigs={setFollowigs}
-                        isInProfile={false}
-                      />
-                    ))
-                  )}
-              </div>
+              <Feed
+                notes={notes}
+                handleDelete={handleDelete}
+                user={user}
+                followers={followers}
+                setFollowers={setFollowers}
+                followings={followings}
+                setFollowigs={setFollowigs}
+              />
               <div style={{ marginRight: '3rem', marginLeft: '5rem', padding: '0rem 1rem 1rem 1rem', height: 'auto' }}>
                 <Accordion sx={{
                   borderRadius: '5px',
@@ -240,7 +201,7 @@ function Home() {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    { followers.filter(f => f.approved == false).length == 0 ? (
+                    {followers.filter(f => f.approved == false).length == 0 ? (
                       <Typography
                         variant='h7'
                         align='center'
@@ -250,27 +211,18 @@ function Home() {
                       </Typography>
                     ) : (
                       followers.filter(f => f.approved == false).map(f => (
-                      <MiniProfile
-                        key={f.id}
-                        id={f.id}
-                        username={users.find(u => u.id == f.user)?.username}
-                        followers={f}
-                        userLoged={user.user_id}
-                        setFollowers={setFollowers}
-                        followings={followings}
-                        handleGet={handleGet}
-                      />
-                    )))
+                        <MiniProfile
+                          key={f.id}
+                          id={f.id}
+                          username={users.find(u => u.id == f.user)?.username}
+                          followers={f}
+                          userLoged={user.user_id}
+                          setFollowers={setFollowers}
+                          followings={followings}
+                          handleGet={handleGet}
+                        />
+                      )))
                     }
-                    {/* <Button
-                      sx={{
-                        marginTop: '2rem', background: '#FF720A', color: 'white', marginLeft: '2rem',
-                        '&:hover': { background: '#B9770E' }, fontWeight: 'bold', verticalAlign: 'bottom'
-                      }}
-                      onClick={() => { defaultQuantity === 5 ? setDefaultQuantity(Infinity) : setDefaultQuantity(5) }}
-                    >
-                      {defaultQuantity === 5 ? 'Mostrar todos' : 'Mostrar menos'}
-                    </Button> */}
                   </AccordionDetails>
                 </Accordion>
 
