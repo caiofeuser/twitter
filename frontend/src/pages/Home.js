@@ -1,25 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
 import useAxios from '../utils/useAxios';
 import AuthContext from '../context/AuthContext';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import Autocomplete from '@mui/material/Autocomplete';
-import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
-import { useNavigate, } from "react-router-dom";
-import MiniProfile from '../components/MiniProfile';
 import CircularProgress from '@mui/material/CircularProgress';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Feed from '../components/Feed';
+import SearchBar from '../components/SearchBar';
+import UserInfo from '../components/UserInfo';
+import TextInput from '../components/TextInput';
+import Approving from '../components/Approving';
 
 function Home() {
   let { user } = useContext(AuthContext)
-  let navigate = useNavigate();
   const api = useAxios();
   const [notes, setNotes] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -81,12 +73,6 @@ function Home() {
     usersList.push(element.username)
   });
 
-  const handleReRouter = (id) => {
-    if (id !== undefined) {
-      navigate(`/user/${id}`)
-    }
-  }
-
   return (
     <>
       {
@@ -100,76 +86,27 @@ function Home() {
                 Página inicial de {user.username}
               </Typography>
               <div style={{ display: 'flex', marginLeft: '1rem', justifyContent: 'space-between', }}>
-                <div style={{ display: 'flex' }}>
-                  <Typography
-                    variant='h5'
-                  >
-                    Seguidores: <span style={{ fontWeight: 'bold', marginRight: '2rem', color: '#FF720A' }}>
-                      {followers.filter(f => f.approved === true).length}</span>
-                  </Typography>
-                  <Typography
-                    variant='h5'
-                  >
-                    Seguindo: <span style={{ fontWeight: 'bold', color: '#FF720A' }}>{followings.length}</span>
-                  </Typography>
-                </div>
+                <UserInfo
+                  followers={followers}
+                  followings={followings}
+                />
                 <div>
                   <div style={{ margin: ' 0 3rem 0 0' }}>
-                    <Autocomplete
-                      disablePortal
-                      getOptionLabel={(option) =>
-                        usersList.includes(option) ? option : ''
-                      }
-                      id="combo-box-demo"
-                      options={usersList}
-                      onChange={(e, value) => { handleReRouter(users.find(u => u.username == value)?.id) }}
-                      sx={{ width: 300 }}
-                      renderInput={(params) => {
-                        return (
-                          <div>
-                            <TextField {...params} label="Usuários" variant='standard' color='warning'
-                              InputProps={{
-                                ...params.InputProps,
-                                startAdornment: (
-                                  <InputAdornment position="start">
-                                    <PersonSearchIcon />
-                                  </InputAdornment>
-                                )
-                              }}
-                            />
-                          </div>
-                        )
-                      }}
+                    <SearchBar
+                      usersList={usersList}
+                      users={users}
                     />
                   </div>
                 </div>
               </div>
             </Paper>
             <div style={{ marginLeft: '1rem', }} >
-              <TextField
-                onKeyPress={e => { if (e.key === 'Enter') { handlePost(); setThought('') } }}
-                rows={2}
-                color='warning'
-                fullWidth
-                multiline
-                value={thought}
-                label="Oque você está pensando?"
-                sx={{
-                  marginLeft: '1rem', width: '50%', border: 'none', borderRadius: '4px',
-                  background: 'white', marginBottom: '1rem'
-                }}
-                onChange={e => { setThought(e.target.value); }}
-              ></TextField>
-              <Button
-                onClick={() => { handlePost(); setThought('') }}
-                sx={{
-                  marginLeft: '1rem', background: '#FF720A', color: 'white', marginBottom: '1rem',
-                  '&:hover': { background: '#B9770E' }, fontWeight: 'bold', verticalAlign: 'bottom'
-                }}
-                variant="contained"
-              >
-                Post!
-              </Button>
+              <TextInput 
+                thought={thought}
+                setThought={setThought}
+                handlePost={handlePost}
+
+              />
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '2rem', paddingLeft: '0', }}>
               <Feed
@@ -181,52 +118,15 @@ function Home() {
                 followings={followings}
                 setFollowigs={setFollowigs}
               />
-              <div style={{ marginRight: '3rem', marginLeft: '5rem', padding: '0rem 1rem 1rem 1rem', height: 'auto' }}>
-                <Accordion sx={{
-                  borderRadius: '5px',
-                  borderTop: '5px solid #FF720A',
-                  background: '#fbeee4',
-                  paddignBottom: '1rem'
-                }}>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                  >
-                    <Typography
-                      variant='h5'
-                      align='center'
-                      mr={1}
-                      sx={{ fontWeight: 'bold', }}
-                    >
-                      Solicitações à seguir
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    {followers.filter(f => f.approved == false).length == 0 ? (
-                      <Typography
-                        variant='h7'
-                        align='center'
-                        sx={{ fontWeight: 'bold', }}
-                      >
-                        Nenhuma solicitação
-                      </Typography>
-                    ) : (
-                      followers.filter(f => f.approved == false).map(f => (
-                        <MiniProfile
-                          key={f.id}
-                          id={f.id}
-                          username={users.find(u => u.id == f.user)?.username}
-                          followers={f}
-                          userLoged={user.user_id}
-                          setFollowers={setFollowers}
-                          followings={followings}
-                          handleGet={handleGet}
-                        />
-                      )))
-                    }
-                  </AccordionDetails>
-                </Accordion>
+              <Approving 
+                followers={followers}
+                followings={followings}
+                setFollowers={setFollowers}
+                setFollowigs={setFollowigs}
+                user={user}
+                users={users}
 
-              </div>
+              />
             </div>
           </section >
         ) : (
