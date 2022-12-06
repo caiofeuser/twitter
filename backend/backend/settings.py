@@ -43,16 +43,16 @@ INSTALLED_APPS = [
     'corsheaders',
     'api',
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:3000',
-    'https://localhost:3000',
-)
-
-# CSRF_TRUSTED_ORIGINS = [
-#     'https://localhost:3000',
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:3025',
+#     'https://localhost:3025',
 #     'http://localhost:3000',
-# ]
+#     'https://localhost:3000',
+# )
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -62,7 +62,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'backend.urls'
